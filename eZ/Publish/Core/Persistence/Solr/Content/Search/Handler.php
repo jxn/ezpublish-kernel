@@ -10,6 +10,7 @@
 namespace eZ\Publish\Core\Persistence\Solr\Content\Search;
 
 use eZ\Publish\SPI\Persistence\Content;
+use eZ\Publish\SPI\Persistence\Content\Location;
 use eZ\Publish\SPI\Persistence\Content\Location\Handler as LocationHandler;
 use eZ\Publish\SPI\Persistence\Content\Type\Handler as ContentTypeHandler;
 use eZ\Publish\SPI\Persistence\Content\ObjectState\Handler as ObjectStateHandler;
@@ -258,10 +259,15 @@ class Handler implements SearchHandlerInterface
     {
         $locations = $this->locationHandler->loadLocationsByContent( $content->versionInfo->contentInfo->id );
         $mainLocation = null;
+        $locationDocuments = array();
         foreach ( $locations as $location )
         {
+            $locationDocuments[] = $this->mapLocation( $location, $content->versionInfo->contentInfo->mainLocationId );
+
             if ( $location->id == $content->versionInfo->contentInfo->mainLocationId )
+            {
                 $mainLocation = $location;
+            }
         }
         $section = $this->sectionHandler->load( $content->versionInfo->contentInfo->sectionId );
 
@@ -277,7 +283,12 @@ class Handler implements SearchHandlerInterface
         $document = array(
             new Field(
                 'id',
-                $content->versionInfo->contentInfo->id,
+                'content' . $content->versionInfo->contentInfo->id,
+                new FieldType\IdentifierField()
+            ),
+            new Field(
+                'document_type',
+                'content',
                 new FieldType\IdentifierField()
             ),
             new Field(
@@ -437,6 +448,7 @@ class Handler implements SearchHandlerInterface
                 $content->versionInfo->contentInfo->alwaysAvailable,
                 new FieldType\BooleanField()
             ),
+            $locationDocuments
         );
 
         if ( $mainLocation !== null )
@@ -558,6 +570,89 @@ class Handler implements SearchHandlerInterface
         }
 
         return array_keys( $ancestorLocationContentIds );
+    }
+
+    /**
+     * Map content to document.
+     *
+     * A document is an array of fields
+     *
+     * @param \eZ\Publish\SPI\Persistence\Content\Location $location
+     * @param int|string $mainLocationId
+     *
+     * @return array
+     */
+    protected function mapLocation( Location $location, $mainLocationId )
+    {
+        $document = array(
+            new Field(
+                'id',
+                'location' . $location->id,
+                new FieldType\IdentifierField()
+            ),
+            new Field(
+                'document_type',
+                'location',
+                new FieldType\IdentifierField()
+            ),
+            new Field(
+                'priority',
+                $location->priority,
+                new FieldType\IntegerField()
+            ),
+            new Field(
+                'hidden',
+                $location->hidden,
+                new FieldType\BooleanField()
+            ),
+            new Field(
+                'invisible',
+                $location->invisible,
+                new FieldType\BooleanField()
+            ),
+            new Field(
+                'remote_id',
+                $location->remoteId,
+                new FieldType\IdentifierField()
+            ),
+            new Field(
+                'content_id',
+                $location->contentId,
+                new FieldType\IdentifierField()
+            ),
+            new Field(
+                'parent_id',
+                $location->parentId,
+                new FieldType\IdentifierField()
+            ),
+            new Field(
+                'path_string',
+                $location->pathString,
+                new FieldType\IdentifierField()
+            ),
+            new Field(
+                'depth',
+                $location->depth,
+                new FieldType\IntegerField()
+            ),
+            new Field(
+                'sort_field',
+                $location->sortField,
+                new FieldType\IdentifierField()
+            ),
+            new Field(
+                'sort_order',
+                $location->sortOrder,
+                new FieldType\IdentifierField()
+            ),
+            new Field(
+                'is_main_location',
+                ( $location->id === $mainLocationId ),
+                new FieldType\BooleanField()
+            ),
+        );
+
+        return $document;
     }
 
     /**
