@@ -21,7 +21,8 @@ use eZ\Publish\Core\Persistence\Solr\Content\Search\FieldValueMapper;
 use eZ\Publish\SPI\Persistence\Content\ContentInfo as SPIContentInfo;
 use RuntimeException;
 use XmlWriter;
-use eZ\Publish\SPI\Persistence\Content\Search\Field;
+use eZ\Publish\SPI\Search\Field;
+use eZ\Publish\SPI\Search\Document;
 
 /**
  * The Content Search Gateway provides the implementation for one database to
@@ -201,7 +202,7 @@ class Native extends Gateway
     /**
      * Indexes a content object
      *
-     * @param \eZ\Publish\SPI\Search\Field[][] $documents
+     * @param \eZ\Publish\SPI\Search\Document[] $documents
      * @todo $documents should be generated more on demand then this and sent to Solr in chunks before final commit
      *
      * @return void
@@ -382,49 +383,41 @@ class Native extends Gateway
     /**
      * Create document(s) update XML
      *
-     * @param array $documents
+     * @param \eZ\Publish\SPI\Search\Document[] $documents
      *
      * @return string
      */
     protected function createUpdates( array $documents )
     {
-        $xml = new XmlWriter();
-        $xml->openMemory();
-        $xml->startElement( 'add' );
+        $xmlWriter = new XmlWriter();
+        $xmlWriter->openMemory();
+        $xmlWriter->startElement( 'add' );
 
         foreach ( $documents as $document )
         {
-            $xml->startElement( 'doc' );
-
-            foreach ( $document as $field )
-            {
-                if ( $field instanceof Field )
-                {
-                    $this->writeField( $xml, $field );
-                }
-
-                if ( is_array( $field ) )
-                {
-                    foreach ( $field as $locationDocument )
-                    {
-                        $xml->startElement( 'doc' );
-
-                        foreach ( $locationDocument as $locationField )
-                        {
-                            $this->writeField( $xml, $locationField );
-                        }
-
-                        $xml->endElement();
-                    }
-                }
-            }
-
-            $xml->endElement();
+            $this->writeDocument( $xmlWriter, $document );
         }
 
-        $xml->endElement();
+        $xmlWriter->endElement();
 
-        return $xml->outputMemory( true );
+        return $xmlWriter->outputMemory( true );
+    }
+
+    protected function writeDocument( XmlWriter $xmlWriter, Document $document )
+    {
+        $xmlWriter->startElement( 'doc' );
+
+        foreach ( $document->fields as $field )
+        {
+            $this->writeField( $xmlWriter, $field );
+        }
+
+        foreach ( $document->documents as $document )
+        {
+            $this->writeDocument( $xmlWriter, $document );
+        }
+
+        $xmlWriter->endElement();
     }
 
     protected function writeField( XmlWriter $xmlWriter, Field $field )

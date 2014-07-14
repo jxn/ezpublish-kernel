@@ -7,7 +7,7 @@
  * @version //autogentag//
  */
 
-namespace eZ\Publish\SPI\Persistence\Content\Search;
+namespace eZ\Publish\SPI\Search;
 
 use eZ\Publish\API\Repository\Values\ValueObject;
 
@@ -19,14 +19,14 @@ class Document extends ValueObject
     /**
      * An array of fields
      *
-     * @var \eZ\Publish\SPI\Persistence\Content\Search\Field[]
+     * @var \eZ\Publish\SPI\Search\Field[]
      */
     public $fields = array();
 
     /**
      * An array of sub-documents
      *
-     * @var \eZ\Publish\SPI\Persistence\Content\Search\Document[]
+     * @var \eZ\Publish\SPI\Search\Document[]
      */
     public $documents = array();
 }
