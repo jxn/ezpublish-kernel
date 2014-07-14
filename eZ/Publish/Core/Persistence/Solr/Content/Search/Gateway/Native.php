@@ -20,6 +20,8 @@ use eZ\Publish\Core\Persistence\Solr\Content\Search\FacetBuilderVisitor;
 use eZ\Publish\Core\Persistence\Solr\Content\Search\FieldValueMapper;
 use eZ\Publish\SPI\Persistence\Content\ContentInfo as SPIContentInfo;
 use RuntimeException;
+use XmlWriter;
+use eZ\Publish\SPI\Persistence\Content\Search\Field;
 
 /**
  * The Content Search Gateway provides the implementation for one database to
@@ -108,8 +110,8 @@ class Native extends Gateway
     public function findContent( Query $query, array $fieldFilters = array() )
     {
         $parameters = array(
-            "q" => $this->criterionVisitor->visit( $query->query ),
-            "fq" => $this->criterionVisitor->visit( $query->filter ),
+            "q" => 'document_type_id:"content" AND ' . $this->criterionVisitor->visit( $query->query ),
+            "fq" => 'document_type_id:"content" AND ' . $this->criterionVisitor->visit( $query->filter ),
             "sort" => implode(
                 ", ",
                 array_map(
@@ -145,6 +147,7 @@ class Native extends Gateway
                 )
             )
         );
+
         // @todo: Error handling?
         $data = json_decode( $response->body );
 
@@ -164,7 +167,7 @@ class Native extends Gateway
                     'score'       => $doc->score,
                     'valueObject' => new SPIContentInfo(
                         array(
-                            'id' => $doc->id,
+                            'id' => substr( $doc->id, 7 ),
                             'name' => $doc->name_s,
                             'contentTypeId' => $doc->type_id,
                             'sectionId' => $doc->section_id,
@@ -385,29 +388,56 @@ class Native extends Gateway
      */
     protected function createUpdates( array $documents )
     {
-        $xml = new \XmlWriter();
+        $xml = new XmlWriter();
         $xml->openMemory();
         $xml->startElement( 'add' );
 
         foreach ( $documents as $document )
         {
             $xml->startElement( 'doc' );
+
             foreach ( $document as $field )
             {
-                foreach ( (array)$this->fieldValueMapper->map( $field ) as $value )
+                if ( $field instanceof Field )
                 {
-                    $xml->startElement( 'field' );
-                    $xml->writeAttribute(
-                        'name',
-                        $this->nameGenerator->getTypedName( $field->name, $field->type )
-                    );
-                    $xml->text( $value );
-                    $xml->endElement();
+                    $this->writeField( $xml, $field );
+                }
+
+                if ( is_array( $field ) )
+                {
+                    foreach ( $field as $locationDocument )
+                    {
+                        $xml->startElement( 'doc' );
+
+                        foreach ( $locationDocument as $locationField )
+                        {
+                            $this->writeField( $xml, $locationField );
+                        }
+
+                        $xml->endElement();
+                    }
                 }
             }
+
             $xml->endElement();
         }
+
         $xml->endElement();
+
         return $xml->outputMemory( true );
+    }
+
+    protected function writeField( XmlWriter $xmlWriter, Field $field )
+    {
+        foreach ( (array)$this->fieldValueMapper->map( $field ) as $value )
+        {
+            $xmlWriter->startElement( 'field' );
+            $xmlWriter->writeAttribute(
+                'name',
+                $this->nameGenerator->getTypedName( $field->name, $field->type )
+            );
+            $xmlWriter->text( $value );
+            $xmlWriter->endElement();
+        }
     }
 }
