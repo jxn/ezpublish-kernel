@@ -40,7 +40,7 @@ class IsMainLocation extends CriterionVisitor
      */
     public function visit( Criterion $criterion, CriterionVisitor $subVisitor = null )
     {
-        return "is_main_location_b:" . ( $criterion->value[0] === Criterion\Visibility::HIDDEN ? "true" : "false" );
+        return "is_main_location_b:" . ( $criterion->value[0] === Criterion\Location\IsMainLocation::MAIN ? "true" : "false" );
     }
 }
 
