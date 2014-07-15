@@ -582,28 +582,30 @@ class Handler implements SearchHandlerInterface
                 ( $location->id === $content->versionInfo->contentInfo->mainLocationId ),
                 new FieldType\BooleanField()
             ),
+            // Note: denormalized Content data is prefixed with 'content_' to avoid
+            // conflicts when using parent filter
             new Field(
                 'content_name',
                 $content->versionInfo->contentInfo->name,
                 new FieldType\StringField()
             ),
             new Field(
-                'section_identifier',
+                'content_section_identifier',
                 $section->identifier,
                 new FieldType\IdentifierField()
             ),
             new Field(
-                'section_name',
+                'content_section_name',
                 $section->name,
                 new FieldType\StringField()
             ),
             new Field(
-                'modified',
+                'content_modified',
                 $content->versionInfo->contentInfo->modificationDate,
                 new FieldType\DateField()
             ),
             new Field(
-                'published',
+                'content_published',
                 $content->versionInfo->contentInfo->publicationDate,
                 new FieldType\DateField()
             ),
