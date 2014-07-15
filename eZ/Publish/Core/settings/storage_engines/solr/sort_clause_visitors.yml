@@ -11,7 +11,7 @@ parameters:
 
     ezpublish.persistence.solr.search.location.sort_clause_visitor.content_id.class: eZ\Publish\Core\Persistence\Solr\Content\Search\Location\SortClauseVisitor\ContentId
     ezpublish.persistence.solr.search.location.sort_clause_visitor.content_name.class: eZ\Publish\Core\Persistence\Solr\Content\Search\Location\SortClauseVisitor\ContentName
-    ezpublish.persistence.solr.search.location.sort_clause_visitor.date_published.class: eZ\Publish\Core\Persistence\Solr\Content\Search\SortClauseVisitor\DatePublished
+    ezpublish.persistence.solr.search.location.sort_clause_visitor.date_published.class: eZ\Publish\Core\Persistence\Solr\Content\Search\Location\SortClauseVisitor\DatePublished
     ezpublish.persistence.solr.search.location.sort_clause_visitor.date_modified.class: eZ\Publish\Core\Persistence\Solr\Content\Search\Location\SortClauseVisitor\DateModified
     ezpublish.persistence.solr.search.location.sort_clause_visitor.section_identifier.class: eZ\Publish\Core\Persistence\Solr\Content\Search\Location\SortClauseVisitor\SectionIdentifier
     ezpublish.persistence.solr.search.location.sort_clause_visitor.section_name.class: eZ\Publish\Core\Persistence\Solr\Content\Search\Location\SortClauseVisitor\SectionName
