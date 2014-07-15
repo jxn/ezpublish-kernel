@@ -597,6 +597,16 @@ class Handler implements SearchHandlerInterface
                 $section->name,
                 new FieldType\StringField()
             ),
+            new Field(
+                'modified',
+                $content->versionInfo->contentInfo->modificationDate,
+                new FieldType\DateField()
+            ),
+            new Field(
+                'published',
+                $content->versionInfo->contentInfo->publicationDate,
+                new FieldType\DateField()
+            ),
         );
 
         return new Document(
