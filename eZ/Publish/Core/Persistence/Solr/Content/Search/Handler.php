@@ -263,7 +263,7 @@ class Handler implements SearchHandlerInterface
         $locationDocuments = array();
         foreach ( $locations as $location )
         {
-            $locationDocuments[] = $this->mapLocation( $location, $content->versionInfo->contentInfo->mainLocationId );
+            $locationDocuments[] = $this->mapLocation( $location, $content );
 
             if ( $location->id == $content->versionInfo->contentInfo->mainLocationId )
             {
@@ -508,11 +508,11 @@ class Handler implements SearchHandlerInterface
      * A document is an array of fields
      *
      * @param \eZ\Publish\SPI\Persistence\Content\Location $location
-     * @param int|string $mainLocationId
+     * @param \eZ\Publish\SPI\Persistence\Content $content
      *
      * @return array
      */
-    protected function mapLocation( Location $location, $mainLocationId )
+    protected function mapLocation( Location $location, Content $content )
     {
         $fields = array(
             new Field(
@@ -577,8 +577,13 @@ class Handler implements SearchHandlerInterface
             ),
             new Field(
                 'is_main_location',
-                ( $location->id === $mainLocationId ),
+                ( $location->id === $content->versionInfo->contentInfo->mainLocationId ),
                 new FieldType\BooleanField()
+            ),
+            new Field(
+                'content_name',
+                $content->versionInfo->contentInfo->name,
+                new FieldType\StringField()
             ),
         );
 
