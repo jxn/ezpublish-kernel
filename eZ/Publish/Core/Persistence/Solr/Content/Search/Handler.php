@@ -11,6 +11,7 @@ namespace eZ\Publish\Core\Persistence\Solr\Content\Search;
 
 use eZ\Publish\SPI\Persistence\Content;
 use eZ\Publish\SPI\Persistence\Content\Location;
+use eZ\Publish\SPI\Persistence\Content\Section;
 use eZ\Publish\SPI\Persistence\Content\Location\Handler as LocationHandler;
 use eZ\Publish\SPI\Persistence\Content\Type\Handler as ContentTypeHandler;
 use eZ\Publish\SPI\Persistence\Content\ObjectState\Handler as ObjectStateHandler;
@@ -259,18 +260,18 @@ class Handler implements SearchHandlerInterface
     protected function mapContent( Content $content )
     {
         $locations = $this->locationHandler->loadLocationsByContent( $content->versionInfo->contentInfo->id );
+        $section = $this->sectionHandler->load( $content->versionInfo->contentInfo->sectionId );
         $mainLocation = null;
         $locationDocuments = array();
         foreach ( $locations as $location )
         {
-            $locationDocuments[] = $this->mapLocation( $location, $content );
+            $locationDocuments[] = $this->mapLocation( $location, $content, $section );
 
             if ( $location->id == $content->versionInfo->contentInfo->mainLocationId )
             {
                 $mainLocation = $location;
             }
         }
-        $section = $this->sectionHandler->load( $content->versionInfo->contentInfo->sectionId );
 
         // UserGroups and Users are Content, but permissions cascade is achieved through
         // Locations hierarchy. We index all ancestor Location Content ids of all
@@ -509,10 +510,11 @@ class Handler implements SearchHandlerInterface
      *
      * @param \eZ\Publish\SPI\Persistence\Content\Location $location
      * @param \eZ\Publish\SPI\Persistence\Content $content
+     * @param \eZ\Publish\SPI\Persistence\Content\Section $section
      *
      * @return array
      */
-    protected function mapLocation( Location $location, Content $content )
+    protected function mapLocation( Location $location, Content $content, Section $section )
     {
         $fields = array(
             new Field(
@@ -583,6 +585,16 @@ class Handler implements SearchHandlerInterface
             new Field(
                 'content_name',
                 $content->versionInfo->contentInfo->name,
+                new FieldType\StringField()
+            ),
+            new Field(
+                'section_identifier',
+                $section->identifier,
+                new FieldType\IdentifierField()
+            ),
+            new Field(
+                'section_name',
+                $section->name,
                 new FieldType\StringField()
             ),
         );
