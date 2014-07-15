@@ -1087,6 +1087,18 @@ class SearchServiceTest extends BaseTest
             ),
             array(
                 array(
+                    'filter' => new Criterion\SectionId( array( 2 ) ),
+                    'offset' => 0,
+                    'limit' => 10,
+                    'sortClauses' => array(
+                        new SortClause\DateModified(),
+                        new SortClause\ContentId(),
+                    )
+                ),
+                $fixtureDir . 'SortDateModified.php',
+            ),
+            array(
+                array(
                     'filter' => new Criterion\SectionId( array( 4, 2, 6, 3 ) ),
                     'offset' => 0,
                     'limit' => null,
