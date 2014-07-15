@@ -47,6 +47,7 @@ services:
         arguments:
             - @ezpublish.persistence.legacy_solr.search.content.gateway
             - @ezpublish.persistence.solr.search.field_registry
+            - @ezpublish.spi.persistence.legacy.content.handler
             - @ezpublish.spi.persistence.legacy.location.handler
             - @ezpublish.spi.persistence.legacy.content_type.handler
             - @ezpublish.spi.persistence.legacy.object_state.handler

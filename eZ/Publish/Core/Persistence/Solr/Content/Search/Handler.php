@@ -12,6 +12,7 @@ namespace eZ\Publish\Core\Persistence\Solr\Content\Search;
 use eZ\Publish\SPI\Persistence\Content;
 use eZ\Publish\SPI\Persistence\Content\Location;
 use eZ\Publish\SPI\Persistence\Content\Section;
+use eZ\Publish\SPI\Persistence\Content\Handler as ContentHandler;
 use eZ\Publish\SPI\Persistence\Content\Location\Handler as LocationHandler;
 use eZ\Publish\SPI\Persistence\Content\Type\Handler as ContentTypeHandler;
 use eZ\Publish\SPI\Persistence\Content\ObjectState\Handler as ObjectStateHandler;
@@ -63,6 +64,13 @@ class Handler implements SearchHandlerInterface
     protected $fieldRegistry;
 
     /**
+     * Content handler
+     *
+     * @var \eZ\Publish\SPI\Persistence\Content\Handler
+     */
+    protected $contentHandler;
+
+    /**
      * Location handler
      *
      * @var \eZ\Publish\SPI\Persistence\Content\Location\Handler
@@ -102,14 +110,17 @@ class Handler implements SearchHandlerInterface
      *
      * @param \eZ\Publish\Core\Persistence\Solr\Content\Search\Gateway $gateway
      * @param \eZ\Publish\Core\Persistence\Solr\Content\Search\FieldRegistry $fieldRegistry
+     * @param \eZ\Publish\SPI\Persistence\Content\Handler $contentHandler
      * @param \eZ\Publish\SPI\Persistence\Content\Location\Handler $locationHandler
      * @param \eZ\Publish\SPI\Persistence\Content\Type\Handler $contentTypeHandler
      * @param \eZ\Publish\SPI\Persistence\Content\ObjectState\Handler $objectStateHandler
      * @param \eZ\Publish\SPI\Persistence\Content\Section\Handler $sectionHandler
+     * @param \eZ\Publish\Core\Persistence\Solr\Content\Search\FieldNameGenerator $fieldNameGenerator
      */
     public function __construct(
         Gateway $gateway,
         FieldRegistry $fieldRegistry,
+        ContentHandler $contentHandler,
         LocationHandler $locationHandler,
         ContentTypeHandler $contentTypeHandler,
         ObjectStateHandler $objectStateHandler,
@@ -119,6 +130,7 @@ class Handler implements SearchHandlerInterface
     {
         $this->gateway            = $gateway;
         $this->fieldRegistry      = $fieldRegistry;
+        $this->contentHandler = $contentHandler;
         $this->locationHandler    = $locationHandler;
         $this->contentTypeHandler = $contentTypeHandler;
         $this->objectStateHandler = $objectStateHandler;
@@ -201,8 +213,13 @@ class Handler implements SearchHandlerInterface
      */
     public function indexContent( Content $content )
     {
+        // TODO: maybe not really necessary
+        $blockId = "content{$content->versionInfo->contentInfo->id}";
+        $this->gateway->deleteBlock( $blockId );
+
         $document = $this->mapContent( $content );
-        $this->gateway->bulkIndexContent( array( $document ) );
+
+        $this->gateway->bulkIndexDocuments( array( $document ) );
     }
 
     /**
@@ -222,7 +239,7 @@ class Handler implements SearchHandlerInterface
             $documents[] = $this->mapContent( $content );
 
         if ( !empty( $documents ) )
-            $this->gateway->bulkIndexContent( $documents );
+            $this->gateway->bulkIndexDocuments( $documents );
     }
 
     /**
@@ -235,17 +252,33 @@ class Handler implements SearchHandlerInterface
      */
     public function deleteContent( $contentId, $versionId = null )
     {
-        $this->gateway->deleteContent( $contentId, $versionId );
+        $blockId = "content{$contentId}";
+        $this->gateway->deleteBlock( $blockId );
     }
 
     /**
      * Deletes a location from the index
      *
      * @param mixed $locationId
+     * @param mixed $contentId
      */
-    public function deleteLocation( $locationId )
+    public function deleteLocation( $locationId, $contentId )
     {
-        $this->gateway->deleteLocation( $locationId );
+        $blockId = "content{$contentId}";
+        $this->gateway->deleteBlock( $blockId );
+
+        // TODO it seems this part of location deletion (not last location) misses integration tests
+        try
+        {
+            $contentInfo = $this->contentHandler->loadContentInfo( $contentId );
+        }
+        catch ( NotFoundException $e )
+        {
+            return;
+        }
+
+        $content = $this->contentHandler->load( $contentId, $contentInfo->currentVersionNo );
+        $this->bulkIndexContent( array( $content ) );
     }
 
     /**
