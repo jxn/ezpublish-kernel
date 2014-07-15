@@ -200,14 +200,14 @@ class Native extends Gateway
     }
 
     /**
-     * Indexes a content object
+     * Indexes a block of documents, which in our case is a Content preceded by its Locations.
+     * In Solr block is identifiable by '_root_' field which holds a parent document (Content) id.
      *
      * @param \eZ\Publish\SPI\Search\Document[] $documents
-     * @todo $documents should be generated more on demand then this and sent to Solr in chunks before final commit
      *
-     * @return void
+     * @todo $documents should be generated more on demand then this and sent to Solr in chunks before final commit
      */
-    public function bulkIndexContent( array $documents )
+    public function bulkIndexDocuments( array $documents )
     {
         $updates   = $this->createUpdates( $documents );
         $result   = $this->client->request(
@@ -228,14 +228,12 @@ class Native extends Gateway
     }
 
     /**
-     * Deletes a content object from the index
+     * Deletes a block of documents, which in our case is a Content preceded by its Locations.
+     * In Solr block is identifiable by '_root_' field which holds a parent document (Content) id.
      *
-     * @param int content id
-     * @param int|null version id
-     *
-     * @return void
+     * @param string $blockId
      */
-    public function deleteContent( $contentId, $versionId = null )
+    public function deleteBlock( $blockId )
     {
         $this->client->request(
             'POST',
@@ -244,113 +242,9 @@ class Native extends Gateway
                 array(
                     'Content-Type' => 'text/xml',
                 ),
-                "<delete><query>id:" . (int)$contentId . ( $versionId !== null ? " AND version_id:" . (int)$versionId : "" ) . "</query></delete>"
+                "<delete><query>_root_:" . $blockId . "</query></delete>"
             )
         );
-    }
-
-    /**
-     * Deletes a location from the index
-     *
-     * @param mixed $locationId
-     */
-    public function deleteLocation( $locationId )
-    {
-        $response = $this->client->request(
-            'GET',
-            '/solr/select?' .
-            http_build_query(
-                array(
-                    "q" => "path_mid:*/$locationId/*",
-                    "fl" => "*",
-                    "wt" => "json",
-                )
-            )
-        );
-        // @todo: Error handling?
-        $data = json_decode( $response->body );
-
-        $locationParent = array( $locationId );
-        $contentToDelete = $contentToUpdate = array();
-        foreach ( $data->response->docs as $doc )
-        {
-            // Check that this document only had one location in which case it can be removed.
-            // @todo When orphaned objects will be possible, we will have to update those doc instead of removing.
-            if ( $doc->location_parent_mid == $locationParent || $doc->location_mid == $locationParent )
-            {
-                $contentToDelete[] = $doc->id;
-            }
-            else
-            {
-                $contentToUpdate[] = $doc;
-            }
-        }
-
-        if ( !empty( $contentToDelete ) )
-        {
-            $this->client->request(
-                "POST",
-                "/solr/update?" . ( $this->commit ? "softCommit=true&" : "" ) . "wt=json",
-                new Message(
-                    array(
-                        "Content-Type" => "text/xml",
-                    ),
-                    "<delete><query>id:(" . implode( " ", $contentToDelete ) . ")</query></delete>"
-                )
-            );
-        }
-
-        if ( !empty( $contentToUpdate ) )
-        {
-            $jsonString = "";
-            foreach ( $contentToUpdate as $doc )
-            {
-                // Removing location references in location_parent_mid, location_mid and path_mid
-                // main_* fields are not modified since removing main node is not permitted.
-                foreach ( $doc->location_parent_mid as $key => $value )
-                {
-                    if ( $value == $locationId )
-                    {
-                        unset( $doc->location_parent_mid[$key] );
-                    }
-                }
-                foreach ( $doc->location_mid as $key => $value )
-                {
-                    if ( $value == $locationId )
-                    {
-                        unset( $doc->location_mid[$key] );
-                    }
-                }
-                foreach ( $doc->path_mid as $key => $value )
-                {
-                    if ( strpos( $value, "/$locationId/" ) )
-                    {
-                        unset( $doc->path_mid[$key] );
-                    }
-                }
-
-                // Reindex arrays
-                $doc->location_parent_mid = array_values( $doc->location_parent_mid );
-                $doc->location_mid = array_values( $doc->location_mid );
-                $doc->path_mid = array_values( $doc->path_mid );
-
-                if ( !empty( $jsonString ) )
-                    $jsonString .= ",";
-
-                $jsonString .= '"add": { "doc": ' . json_encode( $doc ) . "}";
-            }
-
-            $this->client->request(
-                "POST",
-                "/solr/update/json?" . ( $this->commit ? "softCommit=true&" : "" ) . "wt=json",
-                new Message(
-                    array(
-                        "Content-Type: application/json",
-                    ),
-                    "{ $jsonString }"
-                )
-            );
-        }
     }
 
     /**
