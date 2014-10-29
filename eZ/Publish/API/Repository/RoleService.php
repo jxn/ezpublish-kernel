@@ -224,13 +224,15 @@ interface RoleService
     /**
      * Returns the roles assigned to the given user
      *
-     * @throws \eZ\Publish\API\Repository\Exceptions\UnauthorizedException if the authenticated user is not allowed to read a user
+     * @throws \eZ\Publish\API\Repository\Exceptions\UnauthorizedException if the current user is not allowed to read a role
+     * @throws \eZ\Publish\API\Repository\Exceptions\InvalidArgumentException On invalid User object
      *
      * @param \eZ\Publish\API\Repository\Values\User\User $user
+     * @param boolean $inherited Also return all inherited Roles from UserGroups User belongs to, and it's parents.
      *
      * @return \eZ\Publish\API\Repository\Values\User\UserRoleAssignment[]
      */
-    public function getRoleAssignmentsForUser( User $user );
+    public function getRoleAssignmentsForUser( User $user, $inherited = false );
 
     /**
      * Returns the roles assigned to the given user group
