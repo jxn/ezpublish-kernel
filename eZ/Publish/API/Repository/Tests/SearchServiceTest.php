@@ -654,7 +654,6 @@ class SearchServiceTest extends BaseTest
      *
      * @dataProvider getFilterContentSearches
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testFindContentFiltered( $queryData, $fixture, $closure = null )
     {
@@ -667,7 +666,6 @@ class SearchServiceTest extends BaseTest
      *
      * @dataProvider getFilterContentSearches
      * @see \eZ\Publish\API\Repository\SearchService::findLocations()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testFindLocationsContentFiltered( $queryData, $fixture, $closure = null )
     {
@@ -679,7 +677,6 @@ class SearchServiceTest extends BaseTest
      * Test for deprecated $criterion property on query object
      *
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      * @deprecated
      */
     public function testDeprecatedCriteriaProperty()
@@ -702,7 +699,6 @@ class SearchServiceTest extends BaseTest
      *
      * @dataProvider getContentQuerySearches
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testQueryContent( $queryData, $fixture, $closure = null )
     {
@@ -716,7 +712,6 @@ class SearchServiceTest extends BaseTest
      * @deprecated
      * @dataProvider getContentQuerySearchesDeprecated
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testQueryContentDeprecated( $queryData, $fixture, $closure = null )
     {
@@ -729,7 +724,6 @@ class SearchServiceTest extends BaseTest
      *
      * @dataProvider getContentQuerySearches
      * @see \eZ\Publish\API\Repository\SearchService::findLocations()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testQueryContentLocations( $queryData, $fixture, $closure = null )
     {
@@ -742,7 +736,6 @@ class SearchServiceTest extends BaseTest
      *
      * @dataProvider getLocationQuerySearches
      * @see \eZ\Publish\API\Repository\SearchService::findLocations()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testQueryLocations( $queryData, $fixture, $closure = null )
     {
@@ -791,7 +784,6 @@ class SearchServiceTest extends BaseTest
      *
      * @dataProvider getCaseInsensitiveSearches
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testFindContentFieldFiltersCaseSensitivity( $queryData )
     {
@@ -807,7 +799,6 @@ class SearchServiceTest extends BaseTest
      *
      * @dataProvider getCaseInsensitiveSearches
      * @see \eZ\Publish\API\Repository\SearchService::findLocations()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testFindLocationsFieldFiltersCaseSensitivity( $queryData )
     {
@@ -886,7 +877,6 @@ class SearchServiceTest extends BaseTest
      * Test for the findContent() method.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testFieldCollectionContains()
     {
@@ -928,7 +918,6 @@ class SearchServiceTest extends BaseTest
      * Test for the findContent() method.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      * @depends eZ\Publish\API\Repository\Tests\SearchServiceTest::testFieldCollectionContains
      */
     public function testFieldCollectionContainsNoMatch()
@@ -1421,7 +1410,6 @@ class SearchServiceTest extends BaseTest
      * Test for the findContent() method.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testMultilingualFieldSort()
     {
@@ -1483,7 +1471,6 @@ class SearchServiceTest extends BaseTest
      * Test for the findContent() method.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testMultilingualFieldSortVariant2()
     {
@@ -1608,7 +1595,6 @@ class SearchServiceTest extends BaseTest
      * Test for the findContent() method.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      * @expectedException \eZ\Publish\API\Repository\Exceptions\InvalidArgumentException
      */
     public function testSearchWithFieldSortThrowsInvalidArgumentExceptionTranslatableField()
@@ -1640,7 +1626,6 @@ class SearchServiceTest extends BaseTest
      * Test for the findContent() method.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      * @expectedException \eZ\Publish\API\Repository\Exceptions\InvalidArgumentException
      */
     public function testSearchWithFieldSortThrowsInvalidArgumentExceptionNonTranslatableField()
@@ -1673,7 +1658,6 @@ class SearchServiceTest extends BaseTest
      * Test for the findContent() method.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testMultilingualFieldSortWithNonTranslatableField()
     {
@@ -1735,7 +1719,6 @@ class SearchServiceTest extends BaseTest
      * Test for the findContent() method.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testMultilingualFieldSortWithDefaultLanguage()
     {
@@ -1797,7 +1780,6 @@ class SearchServiceTest extends BaseTest
      * Test for the findContent() method.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testMultilingualFieldSortWithDefaultLanguageVariant2()
     {
@@ -1859,7 +1841,6 @@ class SearchServiceTest extends BaseTest
      * Test for the findContent() method.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testMultilingualFieldSortUnusedLanguageDoesNotFilterResultSet()
     {
@@ -1902,7 +1883,6 @@ class SearchServiceTest extends BaseTest
      * Test for the findContent() method.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      * @depends eZ\Publish\API\Repository\Tests\SearchServiceTest::testMultilingualFieldSortUnusedLanguageDoesNotFilterResultSet
      */
     public function testMultilingualFieldSortUnusedLanguageDoesNotChangeSort()
@@ -1986,7 +1966,6 @@ class SearchServiceTest extends BaseTest
      *
      * @dataProvider getSortedContentSearchesLegacy
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testFindAndSortContentLegacy( $queryData, $fixture, $closure = null )
     {
@@ -2007,7 +1986,6 @@ class SearchServiceTest extends BaseTest
      *
      * @dataProvider getSortedContentSearchesLegacy
      * @see \eZ\Publish\API\Repository\SearchService::findLocations()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testFindAndSortContentLocationsLegacy( $queryData, $fixture, $closure = null )
     {
@@ -2026,7 +2004,6 @@ class SearchServiceTest extends BaseTest
      *
      * @dataProvider getSortedContentSearches
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testFindAndSortContent( $queryData, $fixture, $closure = null )
     {
@@ -2040,7 +2017,6 @@ class SearchServiceTest extends BaseTest
      * @deprecated
      * @dataProvider getSortedContentSearchesDeprecated
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testFindAndSortContentDeprecated( $queryData, $fixture, $closure = null )
     {
@@ -2053,7 +2029,6 @@ class SearchServiceTest extends BaseTest
      *
      * @dataProvider getSortedContentSearches
      * @see \eZ\Publish\API\Repository\SearchService::findLocations()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testFindAndSortContentLocations( $queryData, $fixture, $closure = null )
     {
@@ -2066,7 +2041,6 @@ class SearchServiceTest extends BaseTest
      *
      * @dataProvider getSortedLocationSearches
      * @see \eZ\Publish\API\Repository\SearchService::findLocations()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testFindAndSortLocations( $queryData, $fixture, $closure = null )
     {
@@ -2316,7 +2290,6 @@ class SearchServiceTest extends BaseTest
      *
      * @dataProvider getFacettedSearches
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testFindFacettedContent( Query $query, $fixture )
     {
@@ -2327,7 +2300,6 @@ class SearchServiceTest extends BaseTest
      * Test for the findContent() method.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testQueryCustomField()
     {
@@ -2357,7 +2329,6 @@ class SearchServiceTest extends BaseTest
      * copy field working.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testQueryModifiedField()
     {
@@ -2425,7 +2396,6 @@ class SearchServiceTest extends BaseTest
      * Test for the findContent() method.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      * @group maplocation
      */
     public function testMapLocationDistanceLessThanOrEqual()
@@ -2504,7 +2474,6 @@ class SearchServiceTest extends BaseTest
      * Test for the findContent() method.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      * @group maplocation
      */
     public function testMapLocationDistanceGreaterThanOrEqual()
@@ -2583,7 +2552,6 @@ class SearchServiceTest extends BaseTest
      * Test for the findContent() method.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      * @group maplocation
      */
     public function testMapLocationDistanceBetween()
@@ -2686,7 +2654,6 @@ class SearchServiceTest extends BaseTest
      * (always very precise) and flat Earth (very imprecise for this use case) models.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      * @group maplocation
      */
     public function testMapLocationDistanceBetweenPolar()
@@ -2749,7 +2716,6 @@ class SearchServiceTest extends BaseTest
      * Test for the findContent() method.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      * @group maplocation
      */
     public function testMapLocationDistanceSortAscending()
@@ -2865,7 +2831,6 @@ class SearchServiceTest extends BaseTest
      * Test for the findContent() method.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      * @group maplocation
      */
     public function testMapLocationDistanceSortDescending()
@@ -2981,7 +2946,6 @@ class SearchServiceTest extends BaseTest
      * Test for the findContent() method.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      * @group maplocation
      */
     public function testMapLocationDistanceWithCustomField()
@@ -3069,7 +3033,6 @@ class SearchServiceTest extends BaseTest
      * Test for the findContent() method.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      * @group maplocation
      */
     public function testMapLocationDistanceWithCustomFieldSort()
@@ -3194,7 +3157,6 @@ class SearchServiceTest extends BaseTest
      * Test for the findLocations() method.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findLocations()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testFindMainLocation()
     {
@@ -3244,7 +3206,6 @@ class SearchServiceTest extends BaseTest
      * Test for the findLocations() method.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findLocations()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testFindNonMainLocation()
     {
@@ -3293,7 +3254,6 @@ class SearchServiceTest extends BaseTest
      * Test for the findLocations() method.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findLocations()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testSortMainLocationAscending()
     {
@@ -3341,7 +3301,6 @@ class SearchServiceTest extends BaseTest
      * Test for the findLocations() method.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findLocations()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testSortMainLocationDescending()
     {
@@ -3389,7 +3348,6 @@ class SearchServiceTest extends BaseTest
      * Test for the findLocations() method.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findLocations()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testContentWithMultipleLocations()
     {
@@ -3445,7 +3403,6 @@ class SearchServiceTest extends BaseTest
      * Test for the findContent() method.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testFieldLt()
     {
@@ -3511,7 +3468,6 @@ class SearchServiceTest extends BaseTest
      * Test for the findContent() method.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testFieldLte()
     {
@@ -3577,7 +3533,6 @@ class SearchServiceTest extends BaseTest
      * Test for the findContent() method.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testFieldGt()
     {
@@ -3643,7 +3598,6 @@ class SearchServiceTest extends BaseTest
      * Test for the findContent() method.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testFieldGte()
     {
@@ -3711,7 +3665,6 @@ class SearchServiceTest extends BaseTest
      * Test for the findContent() method.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testFieldBetween()
     {
@@ -3830,7 +3783,6 @@ class SearchServiceTest extends BaseTest
      * Test for the findContent() method.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testUserMetadataGroupHorizontalFilterContent( $queryType = null )
     {
@@ -3914,7 +3866,6 @@ class SearchServiceTest extends BaseTest
      * Test for the findContent() method.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testUserMetadataGroupHorizontalQueryContent()
     {
@@ -3925,7 +3876,6 @@ class SearchServiceTest extends BaseTest
      * Test for the findLocations() method.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findLocations()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testUserMetadataGroupHorizontalFilterLocation( $queryType = null )
     {
@@ -4025,7 +3975,6 @@ class SearchServiceTest extends BaseTest
      * Test for the findLocations() method.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findLocations()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testUserMetadataGroupHorizontalQueryLocation()
     {
@@ -4042,7 +3991,6 @@ class SearchServiceTest extends BaseTest
      * Test for the findContent() method.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testLanguageAnalysisSeparateContent()
     {
@@ -4111,7 +4059,6 @@ class SearchServiceTest extends BaseTest
      * Test for the findContent() method.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testLanguageAnalysisSameContent()
     {
@@ -4166,7 +4113,6 @@ class SearchServiceTest extends BaseTest
      * Test for the findContent() method.
      *
      * @see \eZ\Publish\API\Repository\SearchService::findContent()
-     * @depends eZ\Publish\API\Repository\Tests\RepositoryTest::testGetSearchService
      */
     public function testLanguageAnalysisSameContentNotFound()
     {
