@@ -4227,7 +4227,7 @@ class SearchServiceTest extends BaseTest
      *
      * @return void
      */
-    protected function assertQueryFixture( Query $query, $fixture, $closure = null )
+    protected function assertQueryFixture( Query $query, $fixture, $closure = null, $ignoreScore = true )
     {
         $repository    = $this->getRepository();
         $searchService = $repository->getSearchService();
@@ -4289,6 +4289,24 @@ class SearchServiceTest extends BaseTest
         {
             $closure( $fixture );
             $closure( $result );
+        }
+
+        if ( $ignoreScore )
+        {
+            foreach ( array( $fixture, $result ) as $result )
+            {
+                $property = new \ReflectionProperty(get_class($result), 'maxScore');
+                $property->setAccessible( true );
+                $property->setValue( $result, 0.0 );
+
+                foreach ( $result->searchHits as $hit )
+                {
+                    $property = new \ReflectionProperty(get_class($hit), 'score');
+                    $property->setAccessible( true );
+                    $property->setValue( $hit, 0.0 );
+
+                }
+            }
         }
 
         $this->assertEquals(
