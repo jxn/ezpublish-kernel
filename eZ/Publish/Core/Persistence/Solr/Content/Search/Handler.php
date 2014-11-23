@@ -461,6 +461,9 @@ class Handler implements SearchHandlerInterface
                 $fieldType = $this->fieldRegistry->getType( $field->type );
                 foreach ( $fieldType->getIndexData( $field ) as $indexField )
                 {
+                    if ( $indexField->value === null )
+                        continue;
+
                     $fields[] = new Field(
                         $this->fieldNameGenerator->getName(
                             $indexField->name,
