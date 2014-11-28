@@ -57,5 +57,5 @@ abstract class Mapper
      *
      * @return \eZ\Publish\Core\Persistence\Elasticsearch\Content\Search\Document
      */
-    abstract public function mapContentLocation( Location $location );
+    abstract public function mapLocation( Location $location );
 }
